@@ -27,7 +27,7 @@ class DynamoDbManagerTest extends DynamoDbTestCase
         $this->mockedClient = $this
             ->getMockBuilder(DynamoDbClient::class)
             ->disableOriginalConstructor()
-            ->setMethods(['putItem', 'updateItem', 'deleteItem', 'scan', 'query', 'batchWriteItem'])
+            ->addMethods(['putItem', 'updateItem', 'deleteItem', 'scan', 'query', 'batchWriteItem'])
             ->getMock();
 
         $service = $this->getMockBuilder(DynamoDbClientInterface::class)->getMock();

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  php:
+    build:
+      context: ./docker/php
+    volumes:
+      - '.:/work'
+    working_dir: /work
+    environment:
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
+    depends_on:
+      - dynamodb
+
+  dynamodb:
+    image: amazon/dynamodb-local
+

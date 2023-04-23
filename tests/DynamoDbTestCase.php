@@ -3,6 +3,7 @@
 namespace BaoPham\DynamoDb\Tests;
 
 use BaoPham\DynamoDb\DynamoDbServiceProvider;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase;
 
 /**
@@ -12,12 +13,7 @@ use Orchestra\Testbench\TestCase;
  */
 abstract class DynamoDbTestCase extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->setUpDatabase();
-    }
+    use DatabaseMigrations;
 
     protected function getPackageProviders($app)
     {
@@ -32,18 +28,19 @@ abstract class DynamoDbTestCase extends TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
+        $app['config']->set('dynamodb.default', 'test');
         $app['config']->set('dynamodb.connections.test', [
             'credentials' => [
                 'key' => 'dynamodb_local',
                 'secret' => 'secret',
             ],
             'region' => 'test',
-            'endpoint' => 'http://localhost:3000',
+            'endpoint' => env('DYNAMODB_ENDPOINT', 'http://localhost:3000'),
         ]);
     }
 
-    protected function setUpDatabase()
+    protected function defineDatabaseMigrations(): void
     {
-        copy(dirname(__FILE__) . '/../dynamodb_local_init.db', dirname(__FILE__) . '/../dynamodb_local_test.db');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 }
